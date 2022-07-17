@@ -1,140 +1,77 @@
-<!DOCTYPE HTML>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Лабораторна работа 2</title>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
     <script>
-        function getGroup() {
-            let group = document.getElementById("group").value;
-            let result = localStorage.getItem(group);
-            //console.dir(localStorage);
-            //console.log(result);
-            document.getElementById('res').innerHTML = result;
-        }
-        function getTeacherAndDisciple() {
-            let teacher = document.getElementById("teacher").value;
-            let disciple = document.getElementById("disciple").value;
-            let teacherAndDisciple = teacher + " " + disciple; 
-            //alert(teacher);
-            //alert(teacherAndDisciple);
-            let result = localStorage.getItem(teacherAndDisciple);
-            //console.dir(localStorage);
-            //console.log(result);
-            document.getElementById('res').innerHTML = result;
-        }
-        function getAuditorium(){
-            let auditorium = document.getElementById("auditorium").value;
-            let result = localStorage.getItem(auditorium);
-            //console.dir(localStorage);
-            //console.log(result);
-            document.getElementById('res').innerHTML = result;
-        }
-        function clearLocarStorage(){
-            localStorage.clear();
-        }
+        function form1() {
+    let group = document.getElementById("group").value;
+    let result = sessionStorage.getItem(group);
+    document.getElementById('res').innerHTML = result; 
+}
+function form2() {
+    let teacher = document.getElementById("teacher").value;
+    let disciple = document.getElementById("disciple").value;
+    let key = teacher + "&" + disciple; 
+    let result = sessionStorage.getItem(key);
+    document.getElementById('res').innerHTML = result;
+}
+function form3(){
+    let auditorium = document.getElementById("auditorium").value;
+    let result = sessionStorage.getItem(auditorium);
+    document.getElementById('res').innerHTML = result;
+}
     </script>
 </head>
-
 <body>
-
-    <form method="get" action="get1.php">
-        <!--Занятие группы-->
-        <p>Вывести расписание занятий группы <select name="group" id="group" onchange="getGroup()">
-
+    <?php include "connection.php"?>
+<form method="get" action="1.php">
+        <p>Вывести расписание лабораторных работ группы 
+            <select name="group" id="group" onchange="form1()">
                 <?php
-                include 'connection.php';
-
-                $group = $collection->distinct("group");
-
-                foreach ($group as $document) {
-                    echo "<option>";
-                    print($document);
-                    echo "</option>";
-                }
-                echo '</select>';
-
-                ?>
-
-                <input type="submit" name="SubmButtonGroup" value="Ок"></p>
-    </form>
-
-    <form method="get" action="get2.php">
-
-        <!--Занятие преподавателя-->
-        <p>Вывести расписание занятий преподавателя по дисциплине <select name="teacher" id=teacher onchange="getTeacherAndDisciple()">
-
-                <?php
-                include 'connection.php';
-
-                $group = $collection->distinct("teacher");
-
-                foreach ($group as $document) {
-                    echo "<option>";
-                    print_r($document);
-                    echo "</option>";
-                }
-                echo '</select>';
-
-                ?>
-
-        дисциплина<select name="disciple" id=disciple onchange = getTeacherAndDisciple()>
-
-                <?php
-                include 'connection.php';
-
-                $group = $collection->distinct("disciple");
-
-                foreach ($group as $document) {
-                    echo "<option>";
-                    print_r($document);
-                    echo "</option>";
+                    $group = $collection->distinct("group");
+                    foreach ($group as $document) {
+                        echo "<option>$document</option>";
                     }
-                    echo '</select>';
-
                 ?>
-
-                <input type="submit" name="SubmButtonTeacherAndDisciple" value="Ок"></p>
+            </select>
+        <button>ОК</button>
     </form>
-
-    <form method="get" action="get3.php">
-        <!--Занятие аудитории-->
-        <p>Вывести расписание аудитории <select name="auditorium" id="auditorium" onchange="getAuditorium()">
-
+    <form method="get" action="2.php">
+        <p>Вывести расписание занятий преподавателя 
+            <select name="teacher" id="teacher" onchange="form2()">
                 <?php
-                include 'connection.php';
-
-                $auditorium = $collection->distinct("auditorium");
-
-                foreach ($auditorium as $document) {
-                    echo "<option>";
-                    print_r($document);
-                    echo "</option>";
-                }
-                echo '</select>';
-
+                    $group = $collection->distinct("teacher");
+                    foreach ($group as $document) {
+                        echo "<option>$document</option>";
+                    }
                 ?>
-                <input type="submit" name="SubmButtonAuditorium" value="Ок"></p>
-
+            </select>
+        c дисциплиной
+            <select name="disciple" id="disciple" onchange = form2()>
+                <?php
+                    $group = $collection->distinct("disciple");
+                    foreach ($group as $document) {
+                        echo "<option>$document</option>";
+                    }    
+                ?>
+            </select>
+        <button>ОК</button>
     </form>
-    <button onclick="clearLocarStorage()">Очистить</button>
-    <table border='1'>
-        <thead>
-            <tr>
-                <th>Group</th>
-                <th>Day</th>
-                <th>Number</th>
-                <th>Auditorium</th>
-                <th>Disciple</th>
-                <th>Type</th>
-                <th>Teacher</th>
-            </tr>
-        </thead>
-        <tbody id="res">
-
-        </tbody>
-    </table>
-
+    <form method="get" action="3.php">
+        <p>Вывести расписание по аудитории 
+            <select name="auditorium" id="auditorium" onchange="form3()">
+                <?php
+                    $auditorium = $collection->distinct("auditorium");
+                    foreach ($auditorium as $document) {
+                        echo "<option>$document</option>";
+                    }
+                ?>
+            </select>
+        <button>ОК</button>
+    </form>
+<p id="res"></p>
 </body>
 </html>
